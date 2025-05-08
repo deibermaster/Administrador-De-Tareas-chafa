@@ -1,6 +1,6 @@
 # Laboratorio de Monitoreo de Procesos
 
-Este proyecto consiste en una aplicación de monitoreo de procesos que incluye tanto una interfaz web como una aplicación de escritorio.
+Este proyecto consiste en una aplicación de monitoreo de procesos que incluye tanto una interfaz web como una aplicación de escritorio. Permite monitorear y analizar procesos del sistema en tiempo real, con visualizaciones interactivas y almacenamiento de datos.
 
 ## Estructura del Proyecto
 
@@ -25,83 +25,166 @@ Este proyecto consiste en una aplicación de monitoreo de procesos que incluye t
 └── requirements.txt      # Dependencias del proyecto
 ```
 
-## Requisitos
+## Requisitos del Sistema
 
+### Requisitos Mínimos
 - Python 3.8 o superior
-- Dependencias listadas en `requirements.txt`:
-  - psutil==5.9.8
-  - Flask==3.0.2
-  - requests==2.31.0
-  - PyQt5==5.15.10
-  - plotly==5.18.0
+- 4GB de RAM
+- 1GB de espacio en disco
+- Conexión a Internet (para actualizaciones y características en línea)
 
-## Instalación
+### Dependencias
+Las siguientes dependencias se instalarán automáticamente:
+- psutil==5.9.8 (Monitoreo de procesos del sistema)
+- Flask==3.0.2 (Servidor web)
+- requests==2.31.0 (Cliente HTTP)
+- PyQt5==5.15.10 (Interfaz gráfica)
+- plotly==5.18.0 (Visualizaciones)
 
-1. Crear un entorno virtual:
+## Instalación Detallada
+
+### 1. Preparación del Entorno
+
+#### Windows
 ```bash
+# Crear entorno virtual
 python -m venv .venv
-```
 
-2. Activar el entorno virtual:
-- Windows:
-```bash
+# Activar entorno virtual
 .venv\Scripts\activate
-```
-- Linux/Mac:
-```bash
-source .venv/bin/activate
+
+# Actualizar pip
+python -m pip install --upgrade pip
 ```
 
-3. Instalar dependencias:
+#### Linux/Mac
 ```bash
+# Crear entorno virtual
+python3 -m venv .venv
+
+# Activar entorno virtual
+source .venv/bin/activate
+
+# Actualizar pip
+python -m pip install --upgrade pip
+```
+
+### 2. Instalación de Dependencias
+```bash
+# Instalar todas las dependencias
 pip install -r requirements.txt
 ```
 
-## Componentes Principales
+### 3. Verificación de la Instalación
+```bash
+# Verificar que Flask está instalado
+python -c "import flask; print(flask.__version__)"
 
-### Aplicación Web (web_app)
+# Verificar que PyQt5 está instalado
+python -c "import PyQt5; print(PyQt5.QtCore.QT_VERSION_STR)"
+```
 
-- **app.py**: Servidor web Flask que proporciona una interfaz web para monitorear procesos
-- **simulador.py**: Simula procesos del sistema para pruebas
-- **proceso.py**: Implementa la lógica de gestión de procesos
-
-### Aplicación de Escritorio (desktop_app)
-
-- **main.py**: Punto de entrada de la aplicación de escritorio
-- **api_client.py**: Cliente para comunicarse con la API
-- **api_server.py**: Servidor API local
-- **process_thread.py**: Manejo de procesos en segundo plano
-- **utils.py**: Funciones de utilidad
-- **gui/**: Componentes de la interfaz gráfica
-
-## Uso
+## Guía de Uso Detallada
 
 ### Aplicación Web
 
-1. Iniciar el servidor web:
+#### 1. Iniciar el Servidor
 ```bash
 cd web_app
 python app.py
 ```
 
-2. Acceder a la interfaz web en `http://localhost:5000`
+El servidor se iniciará en `http://localhost:5000`
+
+#### 2. Características de la Interfaz Web
+- **Dashboard Principal**: Muestra una visión general de los procesos activos
+- **Gráficos en Tiempo Real**: Visualización de uso de CPU y memoria
+- **Lista de Procesos**: Tabla detallada con todos los procesos
+- **Filtros y Búsqueda**: Permite filtrar procesos por nombre, PID o uso de recursos
+
+#### 3. Endpoints de la API
+- `GET /api/processes`: Lista todos los procesos
+- `GET /api/processes/<pid>`: Información detallada de un proceso
+- `GET /api/stats`: Estadísticas del sistema
+- `POST /api/processes/<pid>/kill`: Termina un proceso
 
 ### Aplicación de Escritorio
 
-1. Iniciar la aplicación:
+#### 1. Iniciar la Aplicación
 ```bash
 cd desktop_app
 python main.py
 ```
 
-## Características
+#### 2. Características de la Interfaz de Escritorio
+- **Ventana Principal**: Muestra procesos y estadísticas
+- **Gráficos Interactivos**: Visualizaciones actualizadas en tiempo real
+- **Panel de Control**: Controles para filtrar y gestionar procesos
+- **Exportación de Datos**: Guardar estadísticas en CSV o JSON
 
-- Monitoreo de procesos del sistema en tiempo real
-- Visualización de estadísticas de procesos
-- Interfaz web y de escritorio
-- API REST para integración con otros sistemas
-- Gráficos y visualizaciones de datos
-- Almacenamiento persistente de datos
+## Solución de Problemas Comunes
+
+### 1. Errores de Instalación
+
+#### Error: "Microsoft Visual C++ 14.0 or greater is required"
+```bash
+# Solución: Instalar Visual C++ Build Tools
+# Descargar e instalar desde: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+```
+
+#### Error: "Could not find a version that satisfies the requirement"
+```bash
+# Solución: Actualizar pip y setuptools
+python -m pip install --upgrade pip setuptools wheel
+```
+
+### 2. Errores de Ejecución
+
+#### Error: "Address already in use"
+```bash
+# Solución: Cambiar el puerto en app.py
+# Editar la línea: app.run(port=5001)  # Cambiar a otro puerto
+```
+
+#### Error: "ModuleNotFoundError: No module named 'X'"
+```bash
+# Solución: Reinstalar dependencias
+pip install -r requirements.txt --force-reinstall
+```
+
+### 3. Problemas de Rendimiento
+
+#### La aplicación está lenta
+- Cerrar otros programas que consuman muchos recursos
+- Reducir la frecuencia de actualización en la configuración
+- Limpiar el caché de datos en la carpeta `storage/`
+
+#### Errores de memoria
+- Aumentar el límite de memoria en la configuración
+- Reducir el número de procesos monitoreados
+- Reiniciar la aplicación periódicamente
+
+## Mantenimiento
+
+### Limpieza de Datos
+```bash
+# Limpiar datos antiguos
+cd web_app
+python -c "from storage import cleanup; cleanup()"
+```
+
+### Actualización
+```bash
+# Actualizar dependencias
+pip install -r requirements.txt --upgrade
+```
+
+### Respaldo
+```bash
+# Hacer backup de los datos
+cd web_app/storage
+tar -czf backup_$(date +%Y%m%d).tar.gz *
+```
 
 ## Contribución
 
@@ -109,4 +192,15 @@ python main.py
 2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request 
+5. Abrir un Pull Request
+
+## Soporte
+
+Para reportar problemas o solicitar ayuda:
+1. Revisar la sección de Solución de Problemas
+2. Buscar en los issues existentes
+3. Crear un nuevo issue con:
+   - Descripción detallada del problema
+   - Pasos para reproducir
+   - Logs de error
+   - Versión del sistema y dependencias 
