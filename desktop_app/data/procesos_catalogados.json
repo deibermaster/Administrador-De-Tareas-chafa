@@ -1,0 +1,60 @@
+{
+    "catalogo": "nmae",
+    "procesos": [
+        {
+            "catalogo": 0,
+            "nombre_catalogo": "proc_0",
+            "pid": 0,
+            "nombre": "System Idle Process",
+            "usuario": "NT AUTHORITY\\SYSTEM",
+            "descripcion": "Descripci\u00f3n del proceso System Idle Process",
+            "prioridad": 1,
+            "quantum": 4,
+            "estado": "Listo"
+        },
+        {
+            "catalogo": 1,
+            "nombre_catalogo": "proc_1",
+            "pid": 23712,
+            "nombre": "Discord.exe",
+            "usuario": "DEIBER\\deibe",
+            "descripcion": "Descripci\u00f3n del proceso Discord.exe",
+            "prioridad": 0,
+            "quantum": 4,
+            "estado": "Listo"
+        },
+        {
+            "catalogo": 2,
+            "nombre_catalogo": "proc_2",
+            "pid": 4,
+            "nombre": "System",
+            "usuario": "NT AUTHORITY\\SYSTEM",
+            "descripcion": "Descripci\u00f3n del proceso System",
+            "prioridad": 1,
+            "quantum": 4,
+            "estado": "Listo"
+        },
+        {
+            "catalogo": 3,
+            "nombre_catalogo": "proc_3",
+            "pid": 17796,
+            "nombre": "dwm.exe",
+            "usuario": "",
+            "descripcion": "Descripci\u00f3n del proceso dwm.exe",
+            "prioridad": 1,
+            "quantum": 4,
+            "estado": "Listo"
+        },
+        {
+            "catalogo": 4,
+            "nombre_catalogo": "proc_4",
+            "pid": 3472,
+            "nombre": "AMDRSServ.exe",
+            "usuario": "DEIBER\\deibe",
+            "descripcion": "Descripci\u00f3n del proceso AMDRSServ.exe",
+            "prioridad": 0,
+            "quantum": 4,
+            "estado": "Listo"
+        }
+    ]
+}

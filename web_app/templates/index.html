@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Planificación Round Robin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        .table-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            margin-top: 20px;
+            height: 400px;
+        }
+        .estado-Ejecución { background-color: #ffe082 !important; }
+        .estado-Listo { background-color: #b3e5fc !important; }
+        .estado-Terminado { background-color: #c8e6c9 !important; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Simulador de Planificación Round Robin</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Parámetros de Simulación</h5>
+                        <form id="simulacionForm">
+                            <div class="mb-3">
+                                <label for="th" class="form-label">Tiempo de Hardware (TH)</label>
+                                <input type="number" class="form-control" id="th" value="100" min="1">
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantum" class="form-label">Quantum</label>
+                                <input type="number" class="form-control" id="quantum" value="2" min="1">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simular</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3>Resultados de la Simulación</h3>
+            <div class="table-responsive">
+                <table class="table table-striped" id="resultadosTabla">
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>Proceso</th>
+                            <th>Usuario</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Tiempo Llegada</th>
+                            <th>Ráfaga</th>
+                            <th>Ráfaga Restante</th>
+                            <th>Turnaround</th>
+                            <th>Tiempo Final</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div id="graficoGantt"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('simulacionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const th = document.getElementById('th').value;
+            const quantum = document.getElementById('quantum').value;
+            
+            try {
+                const response = await fetch(`/api/simular?th=${th}&quantum=${quantum}`);
+                const resultados = await response.json();
+                
+                // Actualizar tabla
+                const tbody = document.querySelector('#resultadosTabla tbody');
+                tbody.innerHTML = '';
+                
+                resultados.forEach(proc => {
+                    const row = document.createElement('tr');
+                    row.className = `estado-${proc.estado}`;
+                    row.innerHTML = `
+                        <td>${proc.pid}</td>
+                        <td>${proc.nombre}</td>
+                        <td>${proc.usuario}</td>
+                        <td>${proc.prioridad}</td>
+                        <td>${proc.estado}</td>
+                        <td>${proc.t_llegada}</td>
+                        <td>${proc.rafaga}</td>
+                        <td>${proc.rafaga_restante}</td>
+                        <td>${proc.turnaround}</td>
+                        <td>${proc.t_final}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Crear gráfico Gantt (Turnaround)
+                const procesos = resultados.map(p => p.nombre);
+                const turnarounds = resultados.map(p => p.turnaround);
+                
+                const trace = {
+                    x: turnarounds,
+                    y: procesos,
+                    type: 'bar',
+                    orientation: 'h',
+                    marker: {
+                        color: 'rgb(55, 83, 109)'
+                    }
+                };
+                
+                const layout = {
+                    title: 'Turnaround por Proceso',
+                    xaxis: {
+                        title: 'Turnaround'
+                    },
+                    yaxis: {
+                        title: 'Proceso'
+                    }
+                };
+                
+                Plotly.newPlot('graficoGantt', [trace], layout);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al realizar la simulación');
+            }
+        });
+    </script>
+</body>
+</html> 
