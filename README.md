@@ -86,6 +86,42 @@ python -c "import PyQt5; print(PyQt5.QtCore.QT_VERSION_STR)"
 
 ## Guía de Uso Detallada
 
+### Servidor API
+
+#### 1. Iniciar el Servidor API
+```bash
+# Navegar al directorio de la aplicación de escritorio
+cd desktop_app
+
+# Iniciar el servidor API
+python api_server.py
+```
+
+El servidor API se iniciará en `http://localhost:5001` por defecto.
+
+#### 2. Endpoints del Servidor API
+- `GET /api/status`: Verificar estado del servidor
+- `GET /api/processes`: Obtener lista de procesos
+- `GET /api/processes/<pid>`: Obtener detalles de un proceso específico
+- `POST /api/processes/<pid>/kill`: Terminar un proceso
+- `GET /api/stats`: Obtener estadísticas del sistema
+
+#### 3. Configuración del Servidor
+El servidor API puede configurarse modificando las siguientes variables en `api_server.py`:
+```python
+HOST = 'localhost'  # Cambiar para permitir conexiones remotas
+PORT = 5001        # Cambiar si el puerto está en uso
+DEBUG = False      # Activar para desarrollo
+```
+
+#### 4. Integración con la Aplicación de Escritorio
+La aplicación de escritorio se conecta automáticamente al servidor API local. Si necesitas cambiar la configuración:
+1. Abrir `desktop_app/api_client.py`
+2. Modificar la URL base:
+```python
+BASE_URL = 'http://localhost:5001'  # Cambiar si el servidor está en otro puerto
+```
+
 ### Aplicación Web
 
 #### 1. Iniciar el Servidor
@@ -163,6 +199,31 @@ pip install -r requirements.txt --force-reinstall
 - Aumentar el límite de memoria en la configuración
 - Reducir el número de procesos monitoreados
 - Reiniciar la aplicación periódicamente
+
+### 4. Problemas con el Servidor API
+
+#### Error: "Connection refused"
+```bash
+# Verificar que el servidor API está corriendo
+python desktop_app/api_server.py
+
+# Verificar que no hay otro proceso usando el puerto
+# Windows:
+netstat -ano | findstr :5001
+# Linux/Mac:
+lsof -i :5001
+```
+
+#### Error: "API Server not responding"
+- Verificar que el servidor API está corriendo
+- Comprobar la configuración de la URL en `api_client.py`
+- Verificar que no hay firewall bloqueando la conexión
+
+#### Error: "Port already in use"
+```bash
+# Cambiar el puerto en api_server.py
+PORT = 5002  # Usar un puerto diferente
+```
 
 ## Mantenimiento
 
