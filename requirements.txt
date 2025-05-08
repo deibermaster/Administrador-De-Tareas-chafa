@@ -1,5 +1,5 @@
 psutil==5.9.8
 Flask==3.0.2
-requests==2.31.0
+requests==2.32.2
 PyQt5==5.15.10
 plotly==5.18.0 
